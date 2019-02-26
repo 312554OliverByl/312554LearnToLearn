@@ -125,10 +125,30 @@ fn problem3() {
                           .split_whitespace() //Split into characters.
                           .map(|s| s.parse().unwrap()) //Iterate and parse.
                           .collect(); //Cast into vector.
-
+    
     //Compute and output.
-    for line in 0..5 {
-        
+    let positions = [
+        0,
+        input[0],
+        input[0] + input[1],
+        input[0] + input[1] + input[2],
+        input[0] + input[1] + input[2] + input[3]
+    ];
+    
+    for row in 0..5 {
+        let pos1 = positions[row];
+        let mut result = [0; 5];
+        for column in 0..5 {
+            let pos2 = positions[column];
+            if pos2 >= pos1 {
+                result[column] = pos2 - pos1;
+            } else {
+                result[column] = pos1 - pos2;
+            }
+        }
+
+        println!("{} {} {} {} {}", result[0], result[1], 
+            result[2], result[3], result[4]);
     }
 }
 
