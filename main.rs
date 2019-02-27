@@ -22,7 +22,6 @@ fn main() {
             2 => problem2(),
             3 => problem3(),
             4 => problem4(),
-            5 => problem5(),
             _ => panic!(),
         }
 
@@ -44,15 +43,14 @@ fn get_line_of_input() -> String {
 //Gets the id of a problem from the user.
 //Keeps running until it succeeds.
 fn get_problem() -> u8 {
-    println!("Please enter one of the following problems to view: J1, J2, J3, J4, or J5");
+    println!("Please enter one of the following problems to view: J1, J2, J3, or J4");
     loop {
         match get_line_of_input().trim() {
             "J1" => return 1,
             "J2" => return 2,
             "J3" => return 3,
             "J4" => return 4,
-            "J5" => return 5,
-            _ => println!("Please enter a valid problem name. (J1, J2, J3, J4, or J5)"),
+            _ => println!("Please enter a valid problem name. (J1, J2, J3, or J4)"),
         }
     }
 }
@@ -153,9 +151,49 @@ fn problem3() {
 }
 
 fn problem4() {
+    //Get proper input for problem.
+    println!("Enter input: ");
+    let sunflowers: usize = match get_line_of_input().trim().parse::<usize>() {
+        Ok(line) => line,
+        Err(e) => panic!("Error with input parsing: {}", e),
+    };
 
-}
+    let mut growth_data: Vec<Vec<u16>> = Vec::new();
+    for _i in 0..sunflowers {
+        growth_data.push(get_line_of_input()
+                          .split_whitespace()
+                          .map(|s| s.parse().unwrap())
+                          .collect());
+    }
 
-fn problem5() {
+    //Find out how much we need to rotate the data by.
+    let top_left = growth_data[0][0];
+    let top_right = growth_data[sunflowers - 1][0];
+    let bottom_left = growth_data[0][sunflowers - 1];
 
+    let mut rotate = 0;
+
+    if top_left < top_right && top_left < bottom_left {
+        rotate = 0;
+    }else if top_left < top_right && top_left > bottom_left {
+        rotate = 90;
+    }else if top_left > top_right && top_left > bottom_left {
+        rotate = 180;
+    }else if top_left > top_right && top_left < bottom_left {
+        rotate = 270;
+    }
+
+    //Print data accordingly.
+    for h in 0..sunflowers {
+        for v in 0..sunflowers {
+            match rotate {
+                0 => print!("{} ", growth_data[h][v]),
+                90 => print!("{} ", growth_data[v][sunflowers - h - 1]),
+                180 => print!("{} ", growth_data[sunflowers - h - 1][sunflowers - v - 1]),
+                270 => print!("{} ", growth_data[sunflowers - v - 1][h]),
+                _ => panic!(""),
+            }
+        }
+        println!("");
+    }
 }
